@@ -27,25 +27,37 @@ class MessagesController < ApplicationController
       if @message.save
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.update('new_message', partial: "messages/form", locals: {message: Message.new}),
-            turbo_stream.prepend('messages', partial: "messages/message", locals: {message: @message})
-
-          ]
+            turbo_stream.update('new_message',
+                                partial: "messages/form",
+                                locals: {message: Message.new}),
+            turbo_stream.prepend('messages',
+                                partial: "messages/message",
+                                locals: {message: @message}),
+            turbo_stream.update('message_counter', Message.count),
+            turbo_stream.update('notice', "Message #{@message.id} created")
+            # turbo_stream.update('message_counter', html: Message.count)
+            # turbo_stream.update('message_counter', html: "#{Message.count}")
+            # turbo_stream.append('messages',
+            #                     partial: "messages/message",
+            #                     locals: {message: @message})
+            ]
         end
-        
         format.html { redirect_to @message, notice: "Message was successfully created." }
         format.json { render :show, status: :created, location: @message }
       else
         format.turbo_stream do
           render turbo_stream: [
-            turbo_stream.update('new_message', partial: "messages/form", locals: {message: Message.new})
-          ]
+            turbo_stream.update('new_message',
+                                partial: "messages/form",
+                                locals: {message: @message})
+            ]
         end
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @message.errors, status: :unprocessable_entity }
       end
     end
   end
+
 
   # PATCH/PUT /messages/1 or /messages/1.json
   def update

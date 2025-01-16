@@ -1,9 +1,9 @@
-<p style="color: green"><%= notice %></p>
+<p id="notice" style="color: green"  ><%= notice %></p>
 
 <% content_for :title, "Messages" %>
 
 <h1>Messages</h1>
-<div id="ne_message">
+<div id="new_message">
 <%= render partial: "messages/form", locals:  { message: Message.new } %>
 </div>
 <div id="messages">
